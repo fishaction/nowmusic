@@ -84,47 +84,22 @@ public class MediaAppControllerService extends Service {
             if (mMediaAppDetails.componentName != null) {
                 mBrowser = new MediaBrowserCompat(this, mMediaAppDetails.componentName,
                         new MediaBrowserCompat.ConnectionCallback() {
+                            //MediaBrowserと接続した場合
                             @Override
                             public void onConnected() {
                                 setupMediaController();
-
                             }
-
+                            //MediaBrowserとの接続が切れた場合
                             @Override
-                            public void onConnectionSuspended() {
-                                //TODO(rasekh): shut down browser.
-
-                            }
-
+                            public void onConnectionSuspended() {}
+                            //MediaBrowserに接続できなかった場合
                             @Override
-                            public void onConnectionFailed() {
-                            }
-
+                            public void onConnectionFailed() {}
                         }, null);
                 mBrowser.connect();
 
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(EXTRA_SUGGESTED, true);
-
-                mBrowserExtraSuggested = new MediaBrowserCompat(this, mMediaAppDetails.componentName,
-                        new MediaBrowserCompat.ConnectionCallback() {
-                            @Override
-                            public void onConnected() {
-
-                            }
-
-                            @Override
-                            public void onConnectionSuspended() {
-
-                            }
-
-                            @Override
-                            public void onConnectionFailed() {
-
-                            }
-
-                        }, bundle);
-                mBrowserExtraSuggested.connect();
             } else if (mMediaAppDetails.sessionToken != null) {
                 setupMediaController();
             } else {
