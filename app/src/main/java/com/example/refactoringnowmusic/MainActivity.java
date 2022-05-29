@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    boolean serviceOnFlag = false;
+    final String TAG = "MAIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,15 @@ public class MainActivity extends AppCompatActivity {
                     .setCancelable(false)
                     .show();
         }else{
-            if(!serviceOnFlag){
+            /*if(!serviceOnFlag){
                 serviceOnFlag = true;
                 startService(new Intent(MainActivity.this,MediaBrowserService.class));
                 Log.d("MainActivity","started service MediaBrowserService");
+            }*/
+            if(!MediaBrowserService.isRunning(getApplicationContext())){
+                startService(new Intent(MainActivity.this,MediaBrowserService.class));
+            }else{
+                Log.d(TAG,"MediaBrowserService is Running");
             }
         }
 

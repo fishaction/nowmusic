@@ -5,14 +5,15 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.session.MediaSessionManager;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -30,11 +31,27 @@ public class MediaBrowserService extends Service {
     List<Intent> controllerServiceIntents;
 
     private final String TAG = "MEDIA_BROWSER_SERVICE";
+    public static final String ACTION_IS_RUNNING = "com.example.MediaBrowserService_is_running";
+    private LocalBroadcastManager localBroadcastManager;
+    private android.content.BroadcastReceiver broadcastReceiver;
+
+
+    //MediaBrowserServiceが起動しているかの確認
+    public static Boolean isRunning(Context context){
+        return LocalBroadcastManager.getInstance(context).sendBroadcast(
+                new Intent(ACTION_IS_RUNNING)
+        );
+    }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public class BroadcastReceiver extends android.content.BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {}
     }
 
     private final FindMediaAppsTask.AppListUpdatedCallback mBrowserAppsUpdated =
@@ -56,6 +73,13 @@ public class MediaBrowserService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        localBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+        broadcastReceiver = new MediaBrowserService.BroadcastReceiver();
+
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_IS_RUNNING);
+        localBroadcastManager.registerReceiver(broadcastReceiver,filter);
+
         controllerServiceIntents = new ArrayList<>();
         mMediaSessionListener.onCreate();
     }
@@ -82,6 +106,7 @@ public class MediaBrowserService extends Service {
             mMediaSessionListener.onStop();
         }
         Log.d(TAG,"on Destroy");
+        localBroadcastManager.unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }
 
