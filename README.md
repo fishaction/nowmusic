@@ -4,6 +4,8 @@ Flutterで言われる"Plugin"はFlutterのいわゆるPackageの一種でその
 このリポジトリではnowMusicに実装されていたTwitter API関連は実装されていません。おそらくFlutterのPackageでそこは何とかなると考えているからです。  
 あくまでこのリポジトリはAndroid向けに実装されたプログラムをリファクタリングすることが目的となっています。  
 
+[こちら](https://github.com/fishaction/flutter_get_current_music)のリポジトリではFlutterでnowMusicを開発しています。
+
 ## 流用したファイル
 このプログラムはgooglesamples/android-media-controllerから以下のファイルを利用しています。
 https://github.com/googlesamples/android-media-controller
